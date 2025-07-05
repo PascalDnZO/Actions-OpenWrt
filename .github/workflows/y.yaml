@@ -1,17 +1,15 @@
-name: Test tmate Connection
+name: WebSSH Debug
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Bisa dijalankan manual
 
 jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Start tmate session
-        uses: mxschmitt/action-tmate@v3
-
-      - name: Keep session alive for 15 minutes
-        run: sleep 900
+      - name: Start WebSSH
+        uses: P3TERX/ssh2actions@main
+        # opsional: kamu bisa tambahkan token telegram kalau mau notifikasi
