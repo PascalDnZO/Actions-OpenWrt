@@ -1,30 +1,17 @@
-name: OpenWrt Build with SSH Access
+name: Test tmate Connection
 
 on:
-  workflow_dispatch:  # bisa dijalankan manual dari GitHub
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-
+  debug:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Install build dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y build-essential clang flex bison g++ gawk \
-          gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev \
-          python3-distutils rsync unzip zlib1g-dev swig wget curl
+      - name: Start tmate session
+        uses: mxschmitt/action-tmate@v3
 
-    - name: Clone OpenWrt source
-      run: |
-        git clone https://github.com/openwrt/openwrt.git
-        cd openwrt
-        ./scripts/feeds update -a
-        ./scripts/feeds install -a
-
-    - name: Start SSH terminal (tmate)
-      uses: mxschmitt/action-tmate@v3
-      timeout-minutes: 60
+      - name: Keep session alive for 15 minutes
+        run: sleep 900
