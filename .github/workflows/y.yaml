@@ -1,23 +1,22 @@
-name: Build OpenWrt with SSH Access
+name: OpenWrt Build with SSH Access
 
 on:
-  workflow_dispatch:  # agar bisa dijalankan manual
+  workflow_dispatch:  # bisa dijalankan manual dari GitHub
 
 jobs:
   build:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout Repository
+    - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up build environment
+    - name: Install build dependencies
       run: |
         sudo apt update
-        sudo apt install -y subversion g++ zlib1g-dev build-essential \
-            git python3-distutils python3-setuptools python3-pip \
-            libncurses5-dev gawk gettext unzip file libssl-dev wget \
-            curl rsync libelf-dev ecj fastjar java-propose-classpath
+        sudo apt install -y build-essential clang flex bison g++ gawk \
+          gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev \
+          python3-distutils rsync unzip zlib1g-dev swig wget curl
 
     - name: Clone OpenWrt source
       run: |
@@ -26,12 +25,6 @@ jobs:
         ./scripts/feeds update -a
         ./scripts/feeds install -a
 
-    - name: Start SSH Debug Session (tmate)
+    - name: Start SSH terminal (tmate)
       uses: mxschmitt/action-tmate@v3
-
-    # Jika ingin lanjutkan build otomatis setelah SSH selesai:
-    # - name: Build OpenWrt
-    #   run: |
-    #     cd openwrt
-    #     make defconfig
-    #     make -j$(nproc)
+      timeout-minutes: 60
